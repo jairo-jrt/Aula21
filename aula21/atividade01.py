@@ -70,9 +70,9 @@ except Exception as e:
 try:
 
     # se mais próximo do mínimo, baixa dispersão; do máximo, alta dispersão
-    min = np.min(array_roubo_veiculo)
-    max = np.max(array_roubo_veiculo)
-    amplitude = max - min
+    minimum = np.min(array_roubo_veiculo)
+    maximum = np.max(array_roubo_veiculo)
+    amplitude = maximum - minimum
 
     print('\nMedidas de dispersão')
     print(30 * "=")
@@ -129,6 +129,8 @@ try:
 
     plt.subplots(2, 2, figsize=(16, 8))
     
+    plt.suptitle('Roubo de veículos por município', fontsize=16, fontweight='bold', color='blue')
+
     plt.subplot(2, 2, 1)
     plt.boxplot(array_roubo_veiculo, vert=False, showfliers=True, showmeans=True)
     plt.title('Distribuição de roubo de veículos')
@@ -138,11 +140,11 @@ try:
     plt.text(0.1, 0.9, f'Média: {mean_roubo_veiculo:.2f}')
     plt.text(0.1, 0.8, f'Assimetria: {assimetria:.2f}%')
     plt.text(0.1, 0.7, f'Limite inferior: {lim_inf:.2f}')
-    plt.text(0.1, 0.6, f'Mínimo: {min:.2f}')
+    plt.text(0.1, 0.6, f'Mínimo: {minimum:.2f}')
     plt.text(0.1, 0.5, f'Q1: {q1:.2f}')
     plt.text(0.1, 0.4, f'Mediana: {median_roubo_veiculo:.2f}')
     plt.text(0.1, 0.3, f'Q3: {q3:.2f}')
-    plt.text(0.1, 0.2, f'Máximo: {max:.2f}')
+    plt.text(0.1, 0.2, f'Máximo: {maximum:.2f}')
     plt.text(0.1, 0.1, f'Limite superior: {lim_sup:.2f}')
     plt.text(0.1, 0.0, f'Amplitude: {amplitude:.2f}')
     plt.axis('off')
@@ -158,6 +160,16 @@ try:
             df_roubo_veiculo_out_sup['munic'],
             df_roubo_veiculo_out_sup['roubo_veiculo']
     )
+
+    deslocamento = max(df_roubo_veiculo_out_sup['roubo_veiculo']) * 0.01
+
+    for i, valor in enumerate(df_roubo_veiculo_out_sup['roubo_veiculo']):
+        plt.text(
+            i, 
+            valor + deslocamento, 
+            f'{valor:,}', 
+            ha='center'
+            )
         
     plt.title('Municípios com outliers superiores')
     plt.xticks(rotation=45, ha='right')
@@ -174,6 +186,17 @@ try:
             df_roubo_veiculo_out_inf['munic'],
             df_roubo_veiculo_out_inf['roubo_veiculo'] 
         )
+
+        deslocamento = max(df_roubo_veiculo_out_inf['roubo_veiculo']) * 0.02
+
+        for i, valor in enumerate(df_roubo_veiculo_out_inf['roubo_veiculo']):
+            plt.text(
+                valor + deslocamento, 
+                i, 
+                f'{valor}', 
+                ha='center'
+                ) # valor + 0.5 = posição x, i = posição y
+            
         plt.title('Municípios com outliers inferiores')
     
     else:
@@ -188,11 +211,11 @@ try:
 
         for i, valor in enumerate(df_roubo_veiculo_menor['roubo_veiculo']):
             plt.text(
-                valor + deslocamento, # x
-                i, # y
-                f'{valor:,}',
-                ha='center'
-            )
+                    valor + deslocamento, # x
+                    i, # y
+                    f'{valor:,}',
+                    ha='center'
+                    )
 
     plt.barh(
             # .str.slice(0, 10)
@@ -202,6 +225,7 @@ try:
 
     plt.title('Municípios com menores taxas de roubo de veículos')
 
+    plt.tight_layout()
     plt.show()
 
 except Exception as e:
